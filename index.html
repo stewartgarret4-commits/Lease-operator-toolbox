@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Lease Toolbox" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Lease Operator Toolbox</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">FIELD CALCULATOR</p>
+        <h1>Lease Operator Toolbox</h1>
+      </div>
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle dark mode">☀️</button>
+    </header>
+
+    <nav class="tabs" aria-label="Calculator sections">
+      <button class="tab active" data-tab="well-test">Well Test</button>
+      <button class="tab" data-tab="esp">ESP</button>
+      <button class="tab" data-tab="conversions">Conversions</button>
+    </nav>
+
+    <section id="well-test" class="panel active">
+      <div class="card">
+        <div class="card-title-row">
+          <h2>Well Test</h2>
+          <button id="resetWellTest" class="secondary-btn">Clear</button>
+        </div>
+
+        <label>
+          Well name
+          <input id="wellName" type="text" placeholder="Example: Smith 12H" autocomplete="off" />
+        </label>
+
+        <div class="settings-row">
+          <label>
+            Gauge format
+            <select id="gaugeMode">
+              <option value="feet-inches">Feet & inches</option>
+              <option value="decimal-feet">Feet & tenths / decimal feet</option>
+              <option value="inches">Total inches</option>
+            </select>
+          </label>
+          <label>
+            Tank factor (bbl/in)
+            <input id="tankFactor" type="number" inputmode="decimal" step="0.01" value="2.79" />
+          </label>
+        </div>
+
+        <div id="feetInchesInputs" class="gauge-group">
+          <h3>Beginning oil gauge</h3>
+          <div class="two-col">
+            <label>Feet<input id="startFeet" type="number" inputmode="numeric" min="0" placeholder="3" /></label>
+            <label>Inches<input id="startInches" type="number" inputmode="decimal" min="0" max="11.99" step="0.125" placeholder="6" /></label>
+          </div>
+          <h3>Ending oil gauge</h3>
+          <div class="two-col">
+            <label>Feet<input id="endFeet" type="number" inputmode="numeric" min="0" placeholder="4" /></label>
+            <label>Inches<input id="endInches" type="number" inputmode="decimal" min="0" max="11.99" step="0.125" placeholder="2" /></label>
+          </div>
+        </div>
+
+        <div id="decimalFeetInputs" class="gauge-group hidden">
+          <label>Beginning gauge (ft)<input id="startDecimalFeet" type="number" inputmode="decimal" step="0.01" placeholder="3.50" /></label>
+          <label>Ending gauge (ft)<input id="endDecimalFeet" type="number" inputmode="decimal" step="0.01" placeholder="4.17" /></label>
+        </div>
+
+        <div id="inchInputs" class="gauge-group hidden">
+          <label>Beginning gauge (in)<input id="startTotalInches" type="number" inputmode="decimal" step="0.01" placeholder="42.00" /></label>
+          <label>Ending gauge (in)<input id="endTotalInches" type="number" inputmode="decimal" step="0.01" placeholder="50.00" /></label>
+        </div>
+
+        <div class="three-col">
+          <label>Test hours<input id="testHours" type="number" inputmode="decimal" step="0.25" value="24" /></label>
+          <label>Water meter bbl<input id="waterBbl" type="number" inputmode="decimal" step="0.1" placeholder="4200" /></label>
+          <label>Gas meter MCF<input id="gasMcf" type="number" inputmode="decimal" step="0.1" placeholder="80" /></label>
+        </div>
+      </div>
+
+      <div class="card results-card">
+        <h2>Results</h2>
+        <div class="result-grid">
+          <div><span>Gauge change</span><strong id="gaugeChange">0.00 in</strong></div>
+          <div><span>Oil produced</span><strong id="oilProduced">0.0 bbl</strong></div>
+          <div><span>Oil rate</span><strong id="oilRate">0.0 BOPD</strong></div>
+          <div><span>Water rate</span><strong id="waterRate">0.0 BWPD</strong></div>
+          <div><span>Gas rate</span><strong id="gasRate">0.0 MCFD</strong></div>
+          <div><span>Total fluid</span><strong id="totalFluid">0.0 BFPD</strong></div>
+          <div><span>Water cut</span><strong id="waterCut">0.00%</strong></div>
+          <div><span>Oil cut</span><strong id="oilCut">0.00%</strong></div>
+          <div><span>GOR</span><strong id="gor">0.00 MCF/bbl</strong></div>
+        </div>
+        <button id="copyResults" class="primary-btn">Copy Results</button>
+        <p id="copyStatus" class="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section id="esp" class="panel">
+      <div class="card">
+        <h2>ESP Fluid Level</h2>
+        <label>Pump intake TVD (ft)<input id="pumpTvd" type="number" inputmode="decimal" placeholder="5100" /></label>
+        <label>DHT intake pressure (psi)<input id="intakePressure" type="number" inputmode="decimal" placeholder="1200" /></label>
+        <label>Fluid gradient (psi/ft)<input id="fluidGradient" type="number" inputmode="decimal" step="0.001" value="0.460" /></label>
+      </div>
+      <div class="card results-card">
+        <h2>Results</h2>
+        <div class="result-grid">
+          <div><span>Fluid above intake</span><strong id="fluidAbove">0 ft</strong></div>
+          <div><span>Estimated fluid level</span><strong id="fluidLevel">0 ft TVD</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="conversions" class="panel">
+      <div class="card">
+        <h2>Quick Conversions</h2>
+        <label>Barrels<input id="bblInput" type="number" inputmode="decimal" placeholder="1" /></label>
+        <div class="result-line"><span>Gallons</span><strong id="gallonsOutput">0</strong></div>
+        <label>Pressure (psi)<input id="psiInput" type="number" inputmode="decimal" placeholder="1200" /></label>
+        <label>Gradient (psi/ft)<input id="psiGradient" type="number" inputmode="decimal" step="0.001" value="0.460" /></label>
+        <div class="result-line"><span>Feet of fluid</span><strong id="feetFluidOutput">0</strong></div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Built for field use. Confirm tank strapping and meter units before reporting production.</p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
